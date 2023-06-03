@@ -4,4 +4,6 @@
     <string name="login_to_continue">Para continuar, inicie sesión con Google</string>
     <string name="login">Iniciar sesión</string>
     <string name="error_login">Ocurrió un problema al iniciar sesión</string>
+    <string name="welcome_user">Bienvenido </string>
+    <string name="pokemon_logo">pokemon logo</string>
 </resources>

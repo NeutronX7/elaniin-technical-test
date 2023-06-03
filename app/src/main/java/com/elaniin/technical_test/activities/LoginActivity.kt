@@ -77,7 +77,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun changeActivity(){
-        val intent = Intent(this, MainMenuActivity::class.java)
+        val intent = Intent(this, RegionsActivity::class.java)
         startActivity(intent)
     }
 
