@@ -1,7 +1,9 @@
 package com.elaniin.technical_test.repository
 
 import com.elaniin.technical_test.io.retrofit.Service
+import com.elaniin.technical_test.models.pokedex_region.RegionPokedex
 import com.elaniin.technical_test.models.regions.Region
+import com.elaniin.technical_test.models.selected_region.SelectedRegion
 import com.elaniin.technical_test.utils.Resource
 import okhttp3.ResponseBody
 import org.json.JSONException
@@ -23,6 +25,26 @@ class ServiceRepository @Inject constructor(
             getGenericError(dataFromService?.errorBody())
         }
 
+    }
+
+    override suspend fun getRegionInformation(name: String): Resource<SelectedRegion> {
+
+        val dataFromService = servicesApi.getSelectedRegion(name)
+        return if (dataFromService?.body() != null) {
+            Resource.Success(dataFromService.body()!!)
+        } else {
+            getGenericError(dataFromService?.errorBody())
+        }
+
+    }
+
+    override suspend fun getPokedex(name: String): Resource<RegionPokedex> {
+        val dataFromService = servicesApi.getPokemonInformation(name)
+        return if (dataFromService?.body() != null) {
+            Resource.Success(dataFromService.body()!!)
+        } else {
+            getGenericError(dataFromService?.errorBody())
+        }
     }
 
     private fun getGenericError(responseBodyError: ResponseBody?): Resource.Error {

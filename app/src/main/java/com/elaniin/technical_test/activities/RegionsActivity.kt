@@ -1,23 +1,25 @@
 package com.elaniin.technical_test.activities
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import android.view.View
 import androidx.activity.viewModels
 import com.elaniin.technical_test.R
 import com.elaniin.technical_test.adapters.RegionsAdapter
-import com.elaniin.technical_test.databinding.ActivityLoginBinding
 import com.elaniin.technical_test.databinding.ActivityRegionsBinding
 import com.elaniin.technical_test.utils.ClickListener
-import com.elaniin.technical_test.viewmodels.MainMenuViewModel
+import com.elaniin.technical_test.viewmodels.RegionsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class RegionsActivity : AppCompatActivity(), ClickListener {
 
-    private val viewModel by viewModels<MainMenuViewModel>()
+    private val viewModel by viewModels<RegionsViewModel>()
     private var binding: ActivityRegionsBinding? = null
 
-    private val adapter = RegionsAdapter()
+    private val adapter = RegionsAdapter(this, this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,16 +32,27 @@ class RegionsActivity : AppCompatActivity(), ClickListener {
 
         setContentView(view)
 
-        registerRegionsData()
+        getRegionsData()
+        showLoading()
     }
 
-    private fun registerRegionsData() {
+    private fun getRegionsData() {
         viewModel.itemsLiveData.observe(this) {
             adapter.setData(it)
         }
     }
 
+    private fun showLoading() {
+        if(viewModel.isLoading.value == true){
+            binding!!.progressBar.visibility = View.VISIBLE
+        } else {
+            binding!!.progressBar.visibility = View.GONE
+        }
+    }
+
     override fun onClickItemListener(position: Int) {
-        TODO("Not yet implemented")
+        val intent = Intent(this, OptionsActivity::class.java)
+        intent.putExtra("name", viewModel.itemsLiveData.value?.get(position)?.name)
+        startActivity(intent)
     }
 }

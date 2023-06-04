@@ -18,7 +18,7 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
-class MainMenuViewModel @Inject constructor(
+class RegionsViewModel @Inject constructor(
     val prefs: Prefs,
     private val serviceUseCase: ServiceRepositoryUseCase,
     val repository: ServiceRepository
@@ -26,6 +26,9 @@ class MainMenuViewModel @Inject constructor(
 
     private val itemsMutableLiveData = MutableLiveData<List<Result>>()
     val itemsLiveData: LiveData<List<Result>> = itemsMutableLiveData
+
+    private val _isLoading = MutableLiveData<Boolean>()
+    val isLoading: LiveData<Boolean> = _isLoading
 
     private var regionInfoData: Resource<Region>? = null
 
@@ -48,11 +51,16 @@ class MainMenuViewModel @Inject constructor(
                             it.url
                         )
                     }
-                    Log.d("ERROR", "POSITIVO")
+                    _isLoading.value = false
                 }
 
                 is Resource.Error -> {
                     Log.d("ERROR", dataFromServer.errorMessage)
+                    _isLoading.value = false
+                }
+
+                is Resource.Loading -> {
+                    _isLoading.value = true
                 }
 
                 else -> {}
