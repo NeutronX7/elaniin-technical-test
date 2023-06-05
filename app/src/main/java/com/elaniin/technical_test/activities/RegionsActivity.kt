@@ -1,5 +1,6 @@
 package com.elaniin.technical_test.activities
 
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -11,6 +12,8 @@ import com.elaniin.technical_test.adapters.RegionsAdapter
 import com.elaniin.technical_test.databinding.ActivityRegionsBinding
 import com.elaniin.technical_test.utils.ClickListener
 import com.elaniin.technical_test.viewmodels.RegionsViewModel
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -29,6 +32,11 @@ class RegionsActivity : AppCompatActivity(), ClickListener {
         val view = binding!!.root
         viewModel.getRegions()
         binding!!.regionsRecyclerView.adapter = adapter
+
+        binding!!.fabLogout.setOnClickListener{
+            viewModel.signOutGoogle(this)
+            finish()
+        }
 
         setContentView(view)
 

@@ -1,10 +1,13 @@
 package com.elaniin.technical_test.io.retrofit
 
+import com.elaniin.technical_test.models.pokedex_region.PokemonSpecies
 import com.elaniin.technical_test.models.pokedex_region.RegionPokedex
+import com.elaniin.technical_test.models.pokemon_specie.FlavorTextEntry
+import com.elaniin.technical_test.models.pokemon_specie.Specie
 import com.elaniin.technical_test.models.regions.Region
+import com.elaniin.technical_test.models.responses.Pokemon
 import com.elaniin.technical_test.models.selected_region.SelectedRegion
 import com.elaniin.technical_test.utils.Constants
-import com.elaniin.technical_test.utils.Resource
 import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -24,6 +27,12 @@ interface Service {
 
     @GET("pokedex/{name}")
     suspend fun getPokemonInformation(@Path("name") name: String) : Response<RegionPokedex>?
+
+    @GET("pokemon/{name}")
+    suspend fun getPokemon(@Path("name") name: String) : Response<Pokemon>?
+
+    @GET("pokemon-species/{name}")
+    suspend fun getPokemonSpecie(@Path("name") name: String) : Response<Specie>?
 
     companion object{
         fun create() : Service{

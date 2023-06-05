@@ -1,8 +1,12 @@
 package com.elaniin.technical_test.repository
 
 import com.elaniin.technical_test.io.retrofit.Service
+import com.elaniin.technical_test.models.pokedex_region.PokemonSpecies
 import com.elaniin.technical_test.models.pokedex_region.RegionPokedex
+import com.elaniin.technical_test.models.pokemon_specie.FlavorTextEntry
+import com.elaniin.technical_test.models.pokemon_specie.Specie
 import com.elaniin.technical_test.models.regions.Region
+import com.elaniin.technical_test.models.responses.Pokemon
 import com.elaniin.technical_test.models.selected_region.SelectedRegion
 import com.elaniin.technical_test.utils.Resource
 import okhttp3.ResponseBody
@@ -40,6 +44,24 @@ class ServiceRepository @Inject constructor(
 
     override suspend fun getPokedex(name: String): Resource<RegionPokedex> {
         val dataFromService = servicesApi.getPokemonInformation(name)
+        return if (dataFromService?.body() != null) {
+            Resource.Success(dataFromService.body()!!)
+        } else {
+            getGenericError(dataFromService?.errorBody())
+        }
+    }
+
+    override suspend fun getPokemon(name: String): Resource<Pokemon> {
+        val dataFromService = servicesApi.getPokemon(name)
+        return if (dataFromService?.body() != null) {
+            Resource.Success(dataFromService.body()!!)
+        } else {
+            getGenericError(dataFromService?.errorBody())
+        }
+    }
+
+    override suspend fun getPokemonSpecie(name: String): Resource<Specie> {
+        val dataFromService = servicesApi.getPokemonSpecie(name)
         return if (dataFromService?.body() != null) {
             Resource.Success(dataFromService.body()!!)
         } else {

@@ -9,18 +9,24 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import com.elaniin.technical_test.R
+import com.elaniin.technical_test.databases.User
 import com.elaniin.technical_test.databinding.ActivityLoginBinding
 import com.elaniin.technical_test.viewmodels.LoginViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
     private val viewModel by viewModels<LoginViewModel>()
+
+    private lateinit var db: FirebaseDatabase
+    private lateinit var reference: DatabaseReference
 
     private val googleSO: GoogleSignInOptions by lazy {
         GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail()
@@ -40,6 +46,10 @@ class LoginActivity : AppCompatActivity() {
                     val account = task.getResult(ApiException::class.java)
                     val email = account.email
                     if (email != null) {
+                        val user = account.displayName?.let { User(account.email!!, it, null) }
+                        db = FirebaseDatabase.getInstance()
+                        reference = db.getReference("User")
+                        reference.child(account.displayName ?: "-").setValue(user)
                         viewModel.prefs.accountName = account.displayName ?: "-"
                         viewModel.prefs.accountEmail = account.email ?: ""
                         changeActivity()
@@ -68,6 +78,7 @@ class LoginActivity : AppCompatActivity() {
             login()
         }
 
+        validateGoogleSession()
     }
 
     private fun login() {
@@ -96,5 +107,12 @@ class LoginActivity : AppCompatActivity() {
             getString(R.string.error_login),
             Toast.LENGTH_SHORT
         ).show()
+    }
+
+    private fun validateGoogleSession() {
+        val acc = GoogleSignIn.getLastSignedInAccount(this)
+        if (acc != null && acc.email != null) {
+            changeActivity()
+        }
     }
 }

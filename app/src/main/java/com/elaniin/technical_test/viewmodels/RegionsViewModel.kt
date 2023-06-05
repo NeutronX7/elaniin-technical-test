@@ -1,5 +1,6 @@
 package com.elaniin.technical_test.viewmodels
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -11,6 +12,8 @@ import com.elaniin.technical_test.repository.ServiceRepository
 import com.elaniin.technical_test.repository.ServiceRepositoryUseCase
 import com.elaniin.technical_test.utils.Prefs
 import com.elaniin.technical_test.utils.Resource
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -66,5 +69,11 @@ class RegionsViewModel @Inject constructor(
                 else -> {}
             }
         }
+    }
+
+    fun signOutGoogle(context: Context) {
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).build()
+        val googleSignInClient = GoogleSignIn.getClient(context, gso)
+        googleSignInClient.signOut()
     }
 }

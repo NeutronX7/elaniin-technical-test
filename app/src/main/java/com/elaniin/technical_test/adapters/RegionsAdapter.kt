@@ -50,10 +50,6 @@ class RegionsAdapter(listener: ClickListener, context: Context) : RecyclerView.A
             Log.d("ERROR", "POSITIVO")
             with(ItemRegionBinding.bind(itemView)) {
                 txtRegion.text = item.name
-                /*itemView.setOnClickListener {
-                    //istener?.onClickItemListener(1)
-                    Log.d("ERROR", "CLICKEADO"+item.name)
-                }*/
                 listener = listenerBind
             }
             itemView.setOnClickListener(this)
