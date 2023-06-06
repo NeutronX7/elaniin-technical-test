@@ -25,5 +25,12 @@ class OptionsActivity : AppCompatActivity() {
             intent.putExtra("pokedex", name)
             startActivity(intent)
         }
+
+        binding!!.btnReviewTeams.setOnClickListener{
+            val intent = Intent(this, PokemonTeamsActivity::class.java)
+            intent.putExtra("pokedex", name)
+            startActivity(intent)
+        }
+
     }
 }

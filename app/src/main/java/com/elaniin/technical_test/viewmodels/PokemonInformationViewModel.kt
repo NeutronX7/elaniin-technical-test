@@ -5,6 +5,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.elaniin.technical_test.databases.room.PokemonTeamDao
+import com.elaniin.technical_test.databases.room.entities.PokemonTeamEntity
 import com.elaniin.technical_test.models.pokedex_region.PokemonEntry
 import com.elaniin.technical_test.models.pokemon_specie.FlavorTextEntry
 import com.elaniin.technical_test.models.pokemon_specie.Specie
@@ -130,6 +132,10 @@ class PokemonInformationViewModel @Inject constructor(
         return name.ifEmpty {
             prefs.accountEmail
         }
+    }
+
+    fun insertPokemon(pokemonDao: PokemonTeamDao, pokemonTeamEntity: PokemonTeamEntity) = viewModelScope.launch(Dispatchers.IO) {
+        pokemonDao.insertTeam(pokemonTeamEntity)
     }
 
 }

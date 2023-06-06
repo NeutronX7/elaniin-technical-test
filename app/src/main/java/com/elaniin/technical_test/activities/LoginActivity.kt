@@ -49,7 +49,7 @@ class LoginActivity : AppCompatActivity() {
                         val user = account.displayName?.let { User(account.email!!, it, null) }
                         db = FirebaseDatabase.getInstance()
                         reference = db.getReference("User")
-                        reference.child(account.displayName ?: "-").setValue(user)
+                        reference.child("users").push().setValue(user)
                         viewModel.prefs.accountName = account.displayName ?: "-"
                         viewModel.prefs.accountEmail = account.email ?: ""
                         changeActivity()
