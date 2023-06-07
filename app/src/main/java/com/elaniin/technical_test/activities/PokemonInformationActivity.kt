@@ -76,15 +76,6 @@ class PokemonInformationActivity : AppCompatActivity() {
             for (i in viewModel.pokemonType.value!!.indices) {
                 types += ", " + viewModel.pokemonType.value?.get(i)?.type?.name.toString()
             }
-            val teamList: ArrayList<PokemonTeam> = arrayListOf(
-                PokemonTeam(
-                    viewModel.pokemonName.value.toString(),
-                    viewModel.pokemonNumber.value.toString(),
-                    types,
-                    viewModel.pokemonDescription.value.toString(),
-                    "https://img.pokemondb.net/sprites/black-white/normal/${viewModel.pokemonName.value}.png"
-                )
-            )
             val pokemonTeamEntity = PokemonTeamEntity(
                 name = viewModel.getName(),
                 email = "https://img.pokemondb.net/sprites/black-white/normal/${viewModel.pokemonName.value}.png",
@@ -98,44 +89,11 @@ class PokemonInformationActivity : AppCompatActivity() {
 
             if(pokemonDao.getAll()?.size!! <6){
                 viewModel.insertPokemon(pokemonDao, pokemonTeamEntity)
+                Toast.makeText(this, getString(R.string.pokemon_added), Toast.LENGTH_SHORT).show()
+                finish()
             } else {
                 Toast.makeText(this, getString(R.string.pokemon_not_added), Toast.LENGTH_SHORT).show()
             }
-
-            /*val daoTeam = DaoTeam()
-            daoTeam.getDao()
-            val team = arrayListOf(Team(null, teamList))
-            db = FirebaseDatabase.getInstance()
-            reference = db.getReference("User/users")
-            val uniqueKey: String = reference.push().key.toString()
-            reference.child("User").child(uniqueKey).addChildEventListener(object: ChildEventListener{
-                override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-                    TODO("Not yet implemented")
-                }
-
-                override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
-                    TODO("Not yet implemented")
-                }
-
-                override fun onChildRemoved(snapshot: DataSnapshot) {
-                    TODO("Not yet implemented")
-                }
-
-                override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
-                    TODO("Not yet implemented")
-                }
-
-                override fun onCancelled(error: DatabaseError) {
-                    TODO("Not yet implemented")
-                }
-
-            })
-            val user = User(viewModel.getEmail(), viewModel.getName(), team)
-            daoTeam.add(user).addOnSuccessListener {
-                Toast.makeText(this, getString(R.string.pokemon_added), Toast.LENGTH_SHORT).show()
-            }.addOnFailureListener {
-                Toast.makeText(this, getString(R.string.pokemon_not_added), Toast.LENGTH_SHORT).show()
-            }*/
         }
     }
 }
