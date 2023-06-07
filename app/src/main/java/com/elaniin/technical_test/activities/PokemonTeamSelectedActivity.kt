@@ -1,32 +1,26 @@
 package com.elaniin.technical_test.activities
 
-import android.content.Intent
-import android.os.Bundle
-import android.util.Log
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
 import com.elaniin.technical_test.R
 import com.elaniin.technical_test.adapters.PokemonTeamAdapter
+import com.elaniin.technical_test.adapters.PokemonTeamSelectedAdapter
 import com.elaniin.technical_test.databases.PokemonTeam
 import com.elaniin.technical_test.databases.Team
+import com.elaniin.technical_test.databinding.ActivityPokemonTeamSelectedBinding
 import com.elaniin.technical_test.databinding.ActivityPokemonTeamsBinding
 import com.elaniin.technical_test.utils.ClickListener
-import com.elaniin.technical_test.viewmodels.PokemonTeamViewModel
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import dagger.hilt.android.AndroidEntryPoint
 
+class PokemonTeamSelectedActivity() : AppCompatActivity(), ClickListener {
 
-@AndroidEntryPoint
-class PokemonTeamsActivity : AppCompatActivity(), ClickListener {
+    private var binding: ActivityPokemonTeamSelectedBinding? = null
 
-    private val viewModel by viewModels<PokemonTeamViewModel>()
-    private var binding: ActivityPokemonTeamsBinding? = null
-
-    private var adapter = PokemonTeamAdapter(this, this)
+    private var adapter = PokemonTeamSelectedAdapter(this, this)
 
     private lateinit var db: FirebaseDatabase
     private lateinit var reference: DatabaseReference
@@ -35,21 +29,21 @@ class PokemonTeamsActivity : AppCompatActivity(), ClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_pokemon_teams)
+        setContentView(R.layout.activity_pokemon_team_selected)
 
-        binding = ActivityPokemonTeamsBinding.inflate(layoutInflater)
+        binding = ActivityPokemonTeamSelectedBinding.inflate(layoutInflater)
         val view = binding!!.root
 
-        binding!!.teamsRecyclerView.adapter = adapter
+        binding!!.recyclerViewTeamSelected.adapter = adapter
 
-        val name: String = intent.getStringExtra("pokemonName").toString()
-        region = intent.getStringExtra("name").toString()
+        region = intent.getStringExtra("region").toString()
 
         setContentView(view)
         getData()
+
     }
 
-    private fun getData(){
+    private fun getData() {
         db = FirebaseDatabase.getInstance()
         reference = db.getReference("User")
         val uniqueKey: String = reference.push().key.toString()
@@ -64,18 +58,24 @@ class PokemonTeamsActivity : AppCompatActivity(), ClickListener {
                         for (pokemonSnapshot in propertySnapshot.children) {
 
                             val name = pokemonSnapshot.child("pokemonName").value
-                            val pokemonDescription = pokemonSnapshot.child("pokemonDescription").value
-                            val pokemonNumber = pokemonSnapshot.child("pokemonNumber").value.toString()
+                            val pokemonDescription =
+                                pokemonSnapshot.child("pokemonDescription").value
+                            val pokemonNumber =
+                                pokemonSnapshot.child("pokemonNumber").value.toString()
                             val pokemonPhoto = pokemonSnapshot.child("email").value
                             val pokemonTypes = pokemonSnapshot.child("types").value
-                            pokemonTeam.add(PokemonTeam(name.toString(),
-                                pokemonNumber, pokemonTypes.toString(),
-                                pokemonDescription.toString(), pokemonPhoto.toString()))
+                            pokemonTeam.add(
+                                PokemonTeam(
+                                    name.toString(),
+                                    pokemonNumber, pokemonTypes.toString(),
+                                    pokemonDescription.toString(), pokemonPhoto.toString()
+                                )
+                            )
                         }
                         val team = Team(region, pokemonTeam)
                         pokemonList.add(team)
                     }
-                    adapter.setData(0, pokemonList)
+                    adapter.setData(pokemonList)
 
                 }
             }
@@ -85,8 +85,6 @@ class PokemonTeamsActivity : AppCompatActivity(), ClickListener {
     }
 
     override fun onClickItemListener(position: Int) {
-        val intent = Intent(this, PokemonTeamSelectedActivity::class.java)
-        intent.putExtra("region", region)
-        startActivity(intent)
+
     }
 }

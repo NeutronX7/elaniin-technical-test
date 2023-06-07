@@ -54,7 +54,7 @@ class PokemonActivity : AppCompatActivity(), ClickListener {
         pokemonDao = database.pokemonTeamDao()
 
         if(pokemonDao.getAll()?.size!! in 3..6){
-            val editText: EditText = EditText(this)
+            val editText = EditText(this)
             val dialog: android.app.AlertDialog? = android.app.AlertDialog.Builder(this)
                 .setTitle(getString(R.string.create_team_name))
                 .setMessage(pokemonDao.getAll()?.size.toString())

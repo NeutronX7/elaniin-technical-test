@@ -15,6 +15,9 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".activities.PokemonTeamSelectedActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.PokemonTeamsActivity"
             android:exported="false" />
         <activity
